@@ -6,17 +6,18 @@ keys.addEventListener('click', e => {
 
 if (e.target.matches('button')) {
    
-   
+  
     const key = e.target
     const action = key.dataset.action
     const keyContent = key.textContent
     const displayedNum = display.textContent
     const previousKeyType = calculator.dataset.previousKeyType
-
+    Array.from(key.parentNode.children)
+      .forEach(k => k.classList.remove('is-depressed'))
     
     if (!action) {
         
-      
+          
         if (displayedNum === '0' || previousKeyType === 'operator') {
             display.textContent = keyContent
           }else{
@@ -30,6 +31,8 @@ if (e.target.matches('button')) {
         action === 'multiply' ||
         action === 'divide'
       ) {
+        calculator.dataset.firstValue = displayedNum
+        calculator.dataset.operator = action
         key.classList.add('is-depressed')
         calculator.dataset.previousKeyType = 'operator'
       }
@@ -43,7 +46,26 @@ if (e.target.matches('button')) {
       }
       
       if (action === 'calculate') {
-        console.log('equal key!')
+        const firstValue = calculator.dataset.firstValue
+        const operator = calculator.dataset.operator
+        const secondValue = displayedNum
+        display.textContent = calculate(firstValue, operator, secondValue)
       } 
+
+      const calculate = (n1, operator, n2) => {
+        let result = ''
+        
+        if (operator === 'add') {
+          result = n1 + n2
+        } else if (operator === 'subtract') {
+          result = n1 - n2
+        } else if (operator === 'multiply') {
+          result = n1 * n2
+        } else if (operator === 'divide') {
+          result = n1 / n2
+        }
+        
+        return result
+      }
 }
 })
